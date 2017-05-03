@@ -1,0 +1,26 @@
+- hosts: all
+  tasks:
+      - xml:
+            path: thefile/test.xml
+            xpath: '/ns1:business/rating[@subjective="true"]'
+            namespaces:
+                ns1: "somenamespace"
+                ns2: "somenamespace2"
+            count: true
+        register: hits
+        
+      - debug:
+            var: hits.count  # 0! cannot find children without namespace
+
+      - xml:
+            path: thefile/test.xml
+            xpath: '/ns1:business/ns2:ratingwithnamespace[@subjective="true"]'
+            namespaces:
+                ns1: "somenamespace"
+                ns2: "somenamespace2"
+            count: true
+        register: hits
+        
+      - debug:
+            var: hits.count # 0! found children without namespace
+
